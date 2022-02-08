@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helloworld/home_page/presentation/home_ui.dart';
+import 'package:helloworld/routes/app_pages.dart';
 import 'package:helloworld/splashScreen/utils/const_string.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,12 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(
-                    value: "Welcome to another page",
-                  )));
+      Get.toNamed(Routes.home, arguments: 'Hello');
     });
   }
 

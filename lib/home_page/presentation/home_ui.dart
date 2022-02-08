@@ -1,33 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:helloworld/splashScreen/utils/const_string.dart';
 
 class HomePage extends StatelessWidget {
-  String? value = "";
-
-  HomePage({Key? key, this.value}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextStyle style = const TextStyle(
+        fontFamily: fontMontserrat, fontSize: 18, fontWeight: FontWeight.bold);
+    var data = Get.arguments;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        leading: GestureDetector(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios_sharp)),
-        title: Text("Hello World"),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.blue,
+        title: Text(data, style: style),
+      ),
       body: SafeArea(
         child: Center(
           child: GestureDetector(
-            onTap: (){
-              Navigator.pop(context);
+            onTap: () {
+              Get.back();
             },
             child: Column(
-              children: const [
-                Text("dajkkadklahsdkhkahsdhkkahshsjcndjkcksdnkcndksncnkdsncksdnkcnnsdkcnksdnckskdncskdkcksdnckskckcsncnkscn"),
-                Text("dajkkadklahsdkhkahsdhkkahshsjcndjkcksdnkcndksncnkdsncksdnkcnnsdkcnksdnckskdncskdkcksdnckskckcsncnkscn"),
-                Text("dajkkadklahsdkhkahsdhkkahshsjcndjkcksdnkcndksncnkdsncksdnkcnnsdkcnksdnckskdncskdkcksdnckskckcsncnkscn"),
-                Text("dajkkadklahsdkhkahsdhkkahshsjcndjkcksdnkcndksncnkdsncksdnkcnnsdkcnksdnckskdncskdkcksdnckskckcsncnkscn"),
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: 20,
+                      itemBuilder: (con, index) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hell".toUpperCase(),
+                                  style: style,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                )
               ],
             ),
           ),
