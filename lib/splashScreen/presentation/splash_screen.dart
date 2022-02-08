@@ -1,4 +1,7 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:helloworld/home_page/presentation/home_ui.dart';
 import 'package:helloworld/splashScreen/utils/const_string.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,7 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("Hell Ravindra");
+    Future.delayed(const Duration(seconds: 5), () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage(
+                    value: "Welcome to another page",
+                  )));
+    });
   }
 
   @override
@@ -35,22 +45,39 @@ class _SplashScreenState extends State<SplashScreen> {
           Align(
             alignment: Alignment.center,
             child: Image.asset(
-              logoImage,
+              logo,
               height: 100,
               width: 100,
               fit: BoxFit.contain,
             ),
           ),
-
           GestureDetector(
             onTap: () {
               setState(() {
-                manName = "Hello Ravi";
+                manName = "Welcome to Flutter Demo";
+                Get.changeTheme(ThemeData.dark());
               });
             },
-            child: Text(
-              manName,
-              style: const TextStyle(fontSize: 30.0),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  'Hello world!',
+                  textStyle: const TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  speed: const Duration(milliseconds: 1000),
+                ),
+              ],
+              totalRepeatCount: 4,
+              onTap: () {
+                setState(() {
+                  Get.changeTheme(ThemeData.dark());
+                });
+              },
+              pause: const Duration(milliseconds: 200),
+              displayFullTextOnTap: true,
+              stopPauseOnTap: true,
             ),
           ),
         ],
