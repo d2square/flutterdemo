@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:helloworld/routes/app_pages.dart';
 import 'package:helloworld/splashScreen/utils/const_string.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,13 +15,13 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
-        title: Text(data, style: style),
+        title: Text("Data", style: style),
       ),
       body: SafeArea(
         child: Center(
           child: GestureDetector(
             onTap: () {
-              Get.back();
+              Get.toNamed(Routes.stackDemo);
             },
             child: Column(
               children: [
