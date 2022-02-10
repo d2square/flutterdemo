@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:helloworld/home_page/presentation/drawer_menu.dart';
 import 'package:helloworld/routes/app_pages.dart';
 import 'package:helloworld/splashScreen/utils/const_string.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController textEditingController = new TextEditingController();
+  String? userName;
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +21,8 @@ class HomePage extends StatelessWidget {
         fontFamily: fontMontserrat, fontSize: 18, fontWeight: FontWeight.bold);
     var data = Get.arguments;
     return Scaffold(
+      drawer: DrawerMenu(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: Text("Data", style: style),
       ),
@@ -25,6 +34,29 @@ class HomePage extends StatelessWidget {
             },
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        labelText: "Enter Name", hintText: "Type Here"),
+                    onChanged: (val) {
+                      setState(() {
+                        userName = val;
+                      });
+                    },
+                    controller: textEditingController,
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                MaterialButton(
+                    child: Text("Click Me"),
+                    color: Colors.blue,
+                    onPressed: () {
+                      if (GetUtils.isNull(userName) ||
+                          GetUtils.isNull(textEditingController.text)) {
+                        print("Value is not empty");
+                      }
+                    }),
                 Expanded(
                   child: ListView.builder(
                       itemCount: 20,
