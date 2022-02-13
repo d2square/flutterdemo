@@ -11,10 +11,10 @@ class DrawerMenu extends StatefulWidget {
 
 class _DrawerMenuState extends State<DrawerMenu> {
   List<DrawerModel> drawerList = [
-    new DrawerModel(name: "Home", icon: Icons.home),
-    new DrawerModel(name: "Settings", icon: Icons.settings),
-    new DrawerModel(name: "Print", icon: Icons.print),
-    new DrawerModel(name: "Logout", icon: Icons.logout),
+    DrawerModel(name: "Home", icon: Icons.home),
+    DrawerModel(name: "Settings", icon: Icons.settings),
+    DrawerModel(name: "Print", icon: Icons.print),
+    DrawerModel(name: "Logout", icon: Icons.logout),
   ];
 
   @override
@@ -46,6 +46,20 @@ class _DrawerMenuState extends State<DrawerMenu> {
                       strmenu: drawerList[index].name);
                 }),
           ),
+          Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(Icons.facebook),
+                Icon(Icons.facebook),
+                Icon(Icons.facebook),
+                Icon(Icons.facebook),
+                Icon(Icons.facebook),
+                Icon(Icons.facebook),
+              ],
+            ),
+          )
         ],
       )),
     );

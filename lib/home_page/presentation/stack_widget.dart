@@ -25,21 +25,6 @@ class _StackWidgetState extends State<StackWidget> {
           title: const Text("Stack"),
           actions: const [InkWell(child: Icon(Icons.notification_important))],
         ),
-        body: SafeArea(
-            child: Container(
-          height: 100,
-          width: double.infinity,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40.0),
-              border: Border.all(color: Colors.green.shade400),
-              gradient:
-                  LinearGradient(begin: FractionalOffset(0.0, 3.5), stops: [
-                0.8,
-                1.0
-              ], colors: [
-                const Color(0xFF3366FF),
-                const Color(0xFF00CCFF),
-              ])),
-        )));
+        body: SafeArea(child: Hero(tag: "1", child: Image.asset(logoImage))));
   }
 }
