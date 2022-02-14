@@ -36,9 +36,7 @@ class _HomePageState extends State<HomePage> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Obx(() {
-          return Text(home.s.value, style: style);
-        }),
+        title: Text("Home", style: style),
       ),
       body: SafeArea(
         child: Center(
@@ -53,35 +51,47 @@ class _HomePageState extends State<HomePage> {
                 return Column(
                   children: [
                     Expanded(
-                      child: ListView.builder(
-                          itemCount: controller.strList.length,
-                          shrinkWrap: true,
-                          itemBuilder: (con, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                home.updateSarikaValue("Gautam", index);
-                              },
-                              child: Card(
-                                elevation: 5.0,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    children: [
-                                      Image.asset(
-                                        logoImage,
-                                        height: 100,
-                                        width: 100,
+                      child: controller.loading == true
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : ListView.builder(
+                              itemCount: controller.articleModelList.length,
+                              shrinkWrap: true,
+                              itemBuilder: (con, index) {
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: Card(
+                                    elevation: 5.0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: [
+                                          Image.network(
+                                            controller.articleModelList[index]
+                                                    .urlToImage ??
+                                                "https://www.ncenet.com/wp-content/uploads/2020/04/No-image-found.jpg",
+                                            height: 100,
+                                            width: 100,
+                                          ),
+                                          Text(
+                                            controller.articleModelList[index]
+                                                    .author ??
+                                                "",
+                                            style: style,
+                                          ),
+                                          Text(
+                                            controller.articleModelList[index]
+                                                    .title ??
+                                                "",
+                                            style: style,
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        controller.strList[index],
-                                        style: style,
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
+                                );
+                              }),
                     )
                   ],
                 );
