@@ -44,7 +44,6 @@ class HomeController extends GetxController {
     updateListLoading(true);
     try {
       ///https://newsapi.org/v2/top-headlines?country=us&apiKey=8780cdf148154a18b52efe8b1f666b58
-      ///
       var response =
           await client.get(baseUrl + "?country=$country&apiKey=$apiKey");
       if (response.statusCode == 200) {
@@ -58,5 +57,19 @@ class HomeController extends GetxController {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  /// variable for Getx And Obx
+  RxString stringValu = "Dipak".obs;
+
+  /// Var for GetBuilder
+  String strValue = "Dipak";
+  updateValue(String s) {
+    if (s == "Ravi") {
+      strValue = "Dipak";
+    } else {
+      strValue = s;
+    }
+    update();
   }
 }

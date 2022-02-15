@@ -47,55 +47,36 @@ class _HomePageState extends State<HomePage> {
             },
             child: Hero(
               tag: "1",
-              child: GetBuilder<HomeController>(builder: (controller) {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: controller.loading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: controller.articleModelList.length,
-                              shrinkWrap: true,
-                              itemBuilder: (con, index) {
-                                return GestureDetector(
-                                  onTap: () {},
-                                  child: Card(
-                                    elevation: 5.0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        children: [
-                                          Image.network(
-                                            controller.articleModelList[index]
-                                                    .urlToImage ??
-                                                "https://www.ncenet.com/wp-content/uploads/2020/04/No-image-found.jpg",
-                                            height: 100,
-                                            width: 100,
-                                          ),
-                                          Text(
-                                            controller.articleModelList[index]
-                                                    .author ??
-                                                "",
-                                            style: style,
-                                          ),
-                                          Text(
-                                            controller.articleModelList[index]
-                                                    .title ??
-                                                "",
-                                            style: style,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                    )
-                  ],
-                );
-              }),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // GetX<HomeController>(
+                  //     builder: (homeController) {
+                  //   return GestureDetector(
+                  //       onTap: () {
+                  //         homeController.stringValu.value = "Ravi";
+                  //       },
+                  //       child: Text(homeController.stringValu.value));
+                  // }),
+
+                  Obx(() {
+                    return GestureDetector(
+                        onTap: () {
+                          home.stringValu.value = "Ravi";
+                        },
+                        child: Text(home.stringValu.value));
+                  })
+
+                  // GetBuilder<HomeController>(
+                  //     builder: (controller) {
+                  //   return GestureDetector(
+                  //       onTap: () {
+                  //         controller.updateValue("Ravi");
+                  //       },
+                  //       child: Text(controller.strValue));
+                  // })
+                ],
+              ),
             ),
           ),
         ),
