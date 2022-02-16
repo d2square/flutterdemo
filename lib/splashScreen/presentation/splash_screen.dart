@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
-      Get.toNamed(Routes.home, arguments: 'Hello');
+      Get.toNamed(Routes.signup, arguments: 'Hello');
     });
   }
 
