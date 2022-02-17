@@ -45,37 +45,119 @@ class _HomePageState extends State<HomePage> {
               ///using controller
               //home.updateString("Gautam");
             },
-            child: Hero(
-              tag: "1",
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // GetX<HomeController>(
-                  //     builder: (homeController) {
-                  //   return GestureDetector(
-                  //       onTap: () {
-                  //         homeController.stringValu.value = "Ravi";
-                  //       },
-                  //       child: Text(homeController.stringValu.value));
-                  // }),
+            child: RefreshIndicator(
+              onRefresh: () {
+                return home.getNewsDataFromApi();
+              },
+              child: Hero(
+                tag: "1",
+                child: GetBuilder<HomeController>(builder: (controller) {
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: controller.noInternet == true
+                            ? Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset("assets/internet.gif"),
+                                    InkWell(
+                                        onTap: () {
+                                          home.getNewsDataFromApi();
+                                        },
+                                        child: const Icon(
+                                          Icons.refresh,
+                                          size: 50,
+                                        ))
+                                  ],
+                                ),
+                              )
+                            : controller.loading == true
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ListView.builder(
+                                    itemCount:
+                                        controller.articleModelList.length,
+                                    shrinkWrap: true,
+                                    itemBuilder: (con, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          controller.updateSarikaValue(
+                                              "Gautam", index);
+                                        },
+                                        child: Card(
+                                          elevation: 5.0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Column(
+                                              children: [
+                                                Image.network(
+                                                  controller
+                                                          .articleModelList[
+                                                              index]
+                                                          .urlToImage ??
+                                                      "",
+                                                  height: 100,
+                                                  width: 100,
+                                                ),
+                                                Text(
+                                                  controller
+                                                          .articleModelList[
+                                                              index]
+                                                          .author ??
+                                                      "",
+                                                  style: style,
+                                                ),
+                                                Text(
+                                                  controller
+                                                          .articleModelList[
+                                                              index]
+                                                          .title ??
+                                                      "",
+                                                  style: style,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                      )
+                    ],
+                  );
+                }),
 
-                  Obx(() {
-                    return GestureDetector(
-                        onTap: () {
-                          home.stringValu.value = "Ravi";
-                        },
-                        child: Text(home.stringValu.value));
-                  })
-
-                  // GetBuilder<HomeController>(
-                  //     builder: (controller) {
-                  //   return GestureDetector(
-                  //       onTap: () {
-                  //         controller.updateValue("Ravi");
-                  //       },
-                  //       child: Text(controller.strValue));
-                  // })
-                ],
+                // Column(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     // GetX<HomeController>(
+                //     //     builder: (homeController) {
+                //     //   return GestureDetector(
+                //     //       onTap: () {
+                //     //         homeController.stringValu.value = "Ravi";
+                //     //       },
+                //     //       child: Text(homeController.stringValu.value));
+                //     // }),
+                //
+                //     Obx(() {
+                //       return GestureDetector(
+                //           onTap: () {
+                //             home.stringValu.value = "Ravi";
+                //           },
+                //           child: Text(home.stringValu.value));
+                //     })
+                //
+                //     // GetBuilder<HomeController>(
+                //     //     builder: (controller) {
+                //     //   return GestureDetector(
+                //     //       onTap: () {
+                //     //         controller.updateValue("Ravi");
+                //     //       },
+                //     //       child: Text(controller.strValue));
+                //     // })
+                //   ],
+                // ),
               ),
             ),
           ),

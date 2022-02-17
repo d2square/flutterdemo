@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:helloworld/home_page/domain/news_model.dart';
@@ -34,6 +35,7 @@ class HomeController extends GetxController {
 
   List<Articles> articleModelList = [];
   List<NewsModel> newsModelList = [];
+  bool noInternet = false;
 
   updateListLoading(bool val) {
     loading = val;
@@ -41,18 +43,28 @@ class HomeController extends GetxController {
   }
 
   getNewsDataFromApi() async {
-    updateListLoading(true);
     try {
       ///https://newsapi.org/v2/top-headlines?country=us&apiKey=8780cdf148154a18b52efe8b1f666b58
-      var response =
-          await client.get(baseUrl + "?country=$country&apiKey=$apiKey");
-      if (response.statusCode == 200) {
-        updateListLoading(false);
-        NewsModel newsModel = NewsModel.fromJson(response.data);
-        articleModelList.addAll(newsModel.articles!);
+      var noInternetConnectivity = await (Connectivity().checkConnectivity());
+      if (noInternetConnectivity == ConnectivityResult.mobile ||
+          noInternetConnectivity == ConnectivityResult.wifi) {
+        updateListLoading(true);
+        noInternet = false;
+        update();
+        var response =
+            await client.get(baseUrl + "?country=$country&apiKey=$apiKey");
+        if (response.statusCode == 200) {
+          updateListLoading(false);
+          NewsModel newsModel = NewsModel.fromJson(response.data);
+          articleModelList.addAll(newsModel.articles!);
+        } else {
+          updateListLoading(false);
+          print("error");
+        }
       } else {
         updateListLoading(false);
-        print("error");
+        noInternet = true;
+        update();
       }
     } catch (e) {
       print(e.toString());
@@ -64,6 +76,7 @@ class HomeController extends GetxController {
 
   /// Var for GetBuilder
   String strValue = "Dipak";
+
   updateValue(String s) {
     if (s == "Ravi") {
       strValue = "Dipak";
