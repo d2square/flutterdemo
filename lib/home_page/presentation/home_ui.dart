@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helloworld/home_page/applications/controller/home_controller.dart';
@@ -16,6 +18,49 @@ class _HomePageState extends State<HomePage> {
   TextEditingController textEditingController = new TextEditingController();
   String? userName;
   var home = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    usingStreams();
+  }
+
+  getTime() async {
+    print("awaited time is ${DateTime.now()}");
+    final time = await Future.delayed(Duration(seconds: 2))
+        .then((value) => DateTime.now());
+    print("awaited time is $time");
+  }
+
+  usingStreams() async {
+    final streamController = StreamController<DateTime>();
+    final unSubscribeStream = DateTime.now().add(Duration(seconds: 10));
+    StreamSubscription<DateTime>? subscription;
+
+    var timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      streamController.add(DateTime.now());
+
+      if (DateTime.now().second % 3 == 0) {
+        streamController.addError(() => Exception("Seconds divisible by 3"));
+      }
+    });
+    subscription = streamController.stream.listen((event) async {
+      print(event);
+      if (event.isAfter(unSubscribeStream)) {
+        print("Its after${unSubscribeStream},cleaning");
+        timer.cancel();
+        await streamController.close();
+        await subscription?.cancel();
+      }
+    }, onError: (error, stack) {
+      print("Divisible by three");
+      print("the stream contains error${stack}");
+    }, onDone: () {
+      print("the stream done");
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,37 +172,6 @@ class _HomePageState extends State<HomePage> {
                     ],
                   );
                 }),
-
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     // GetX<HomeController>(
-                //     //     builder: (homeController) {
-                //     //   return GestureDetector(
-                //     //       onTap: () {
-                //     //         homeController.stringValu.value = "Ravi";
-                //     //       },
-                //     //       child: Text(homeController.stringValu.value));
-                //     // }),
-                //
-                //     Obx(() {
-                //       return GestureDetector(
-                //           onTap: () {
-                //             home.stringValu.value = "Ravi";
-                //           },
-                //           child: Text(home.stringValu.value));
-                //     })
-                //
-                //     // GetBuilder<HomeController>(
-                //     //     builder: (controller) {
-                //     //   return GestureDetector(
-                //     //       onTap: () {
-                //     //         controller.updateValue("Ravi");
-                //     //       },
-                //     //       child: Text(controller.strValue));
-                //     // })
-                //   ],
-                // ),
               ),
             ),
           ),
