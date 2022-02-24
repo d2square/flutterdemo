@@ -7,9 +7,9 @@ void main() {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -18,14 +18,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      //defaultTransition: Transition.,
       opaqueRoute: Get.isOpaqueRouteDefault,
       popGesture: Get.isPopGestureEnable,
       debugShowCheckedModeBanner: false,
       locale: const Locale('en', 'US'),
       getPages: AppPages.routes,
       initialRoute: AppPages.initial,
-      //initialBinding: HomePageBinding(),
     );
   }
 }

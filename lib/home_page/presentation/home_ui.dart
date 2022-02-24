@@ -23,43 +23,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    usingStreams();
-  }
-
-  getTime() async {
-    print("awaited time is ${DateTime.now()}");
-    final time = await Future.delayed(Duration(seconds: 2))
-        .then((value) => DateTime.now());
-    print("awaited time is $time");
-  }
-
-  usingStreams() async {
-    final streamController = StreamController<DateTime>();
-    final unSubscribeStream = DateTime.now().add(Duration(seconds: 10));
-    StreamSubscription<DateTime>? subscription;
-
-    var timer = Timer.periodic(Duration(seconds: 2), (timer) {
-      streamController.add(DateTime.now());
-
-      if (DateTime.now().second % 3 == 0) {
-        streamController.addError(() => Exception("Seconds divisible by 3"));
-      }
-    });
-    subscription = streamController.stream.listen((event) async {
-      print(event);
-      if (event.isAfter(unSubscribeStream)) {
-        print("Its after${unSubscribeStream},cleaning");
-        timer.cancel();
-        await streamController.close();
-        await subscription?.cancel();
-      }
-    }, onError: (error, stack) {
-      print("Divisible by three");
-      print("the stream contains error${stack}");
-    }, onDone: () {
-      print("the stream done");
-    });
-
   }
 
   @override
@@ -92,13 +55,26 @@ class _HomePageState extends State<HomePage> {
             },
             child: RefreshIndicator(
               onRefresh: () {
-                return home.getNewsDataFromApi();
+                return home.getBooks("cancer");
               },
               child: Hero(
                 tag: "1",
                 child: GetBuilder<HomeController>(builder: (controller) {
                   return Column(
                     children: [
+                      Row(
+                        children: [
+                          Flexible(
+                              fit: FlexFit.tight,
+                              child: Container(
+                                child: OutlinedButton(
+                                    onPressed: () {}, child: Text("Button1")),
+                              )),
+                          Flexible(
+                              child: OutlinedButton(
+                                  onPressed: () {}, child: Text("Button2")))
+                        ],
+                      ),
                       Expanded(
                         child: controller.noInternet == true
                             ? Center(
@@ -122,8 +98,7 @@ class _HomePageState extends State<HomePage> {
                                     child: CircularProgressIndicator(),
                                   )
                                 : ListView.builder(
-                                    itemCount:
-                                        controller.articleModelList.length,
+                                    itemCount: controller.bookModelList.length,
                                     shrinkWrap: true,
                                     itemBuilder: (con, index) {
                                       return GestureDetector(
@@ -137,28 +112,19 @@ class _HomePageState extends State<HomePage> {
                                             padding: const EdgeInsets.all(10.0),
                                             child: Column(
                                               children: [
-                                                Image.network(
-                                                  controller
-                                                          .articleModelList[
-                                                              index]
-                                                          .urlToImage ??
-                                                      "",
-                                                  height: 100,
-                                                  width: 100,
-                                                ),
                                                 Text(
                                                   controller
-                                                          .articleModelList[
-                                                              index]
-                                                          .author ??
+                                                          .bookModelList[index]
+                                                          .volumeInfo!
+                                                          .title ??
                                                       "",
                                                   style: style,
                                                 ),
                                                 Text(
                                                   controller
-                                                          .articleModelList[
-                                                              index]
-                                                          .title ??
+                                                          .bookModelList[index]
+                                                          .volumeInfo!
+                                                          .description ??
                                                       "",
                                                   style: style,
                                                 ),
