@@ -27,3 +27,24 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class DemoStateless extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Text("Hello");
+  }
+}
+
+class DemoState extends StatefulWidget {
+  const DemoState({Key? key}) : super(key: key);
+
+  @override
+  _DemoStateState createState() => _DemoStateState();
+}
+
+class _DemoStateState extends State<DemoState> {
+  @override
+  Widget build(BuildContext context) {
+    return Checkbox(value: true, onChanged: (val) {});
+  }
+}

@@ -2,16 +2,42 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:helloworld/network/dio_connectivity_request.dart';
 import 'package:helloworld/network/exception.dart';
+import 'package:helloworld/network/retry_interceptor.dart';
 
 class ApiProvider {
-  final client = Dio();
+  static final options = BaseOptions(
+    responseType: ResponseType.json,
+    connectTimeout: 5000,
+    receiveTimeout: 3000,
+  );
 
-  Future<dynamic> get(String url, String baseUrl, var params) async {
+  static Dio initDio() {
+    return Dio(options);
+  }
+
+  static final client = initDio();
+  static final dioRequest = addInterceptor(client);
+
+  Future<dynamic> getCall(String url, String baseUrl, var params) async {
     Response responseJson;
     try {
-      final response = await client.get(baseUrl + url, queryParameters: params);
+      final response =
+          await dioRequest.get(baseUrl + url);
+      responseJson = _response(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> postCall(String url, String baseUrl, var params) async {
+    Response responseJson;
+    try {
+      final response = await dioRequest.post(baseUrl + url, data: params);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -23,7 +49,6 @@ class ApiProvider {
     switch (response.statusCode) {
       case 200:
         var responseJson = json.decode(response.data.toString());
-        print(responseJson);
         return responseJson;
       case 400:
         throw BadRequestException(response.data.toString());
@@ -36,5 +61,11 @@ class ApiProvider {
       default:
         throw FetchDataException('Server Error : ${response.statusCode}');
     }
+  }
+
+  static addInterceptor(Dio dioNet) {
+    dioNet.interceptors.add(RetryInterceptor(
+        dioConnectivityRequest:
+            DioConnectivityRequest(connectivity: Connectivity(), dio: Dio())));
   }
 }
