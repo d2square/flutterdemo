@@ -25,8 +25,10 @@ class ApiProvider {
   Future<dynamic> getCall(String url, String baseUrl, var params) async {
     Response responseJson;
     try {
-      final response =
-          await dioRequest.get(baseUrl + url);
+      var uri = baseUrl +
+          url +
+          ((params != null) ? queryParameters(params) : "");
+      final response = await dioRequest.get(uri);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -43,6 +45,14 @@ class ApiProvider {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
+  }
+
+  String queryParameters(Map<String, String>? params) {
+    if (params != null) {
+      final jsonString = Uri(queryParameters: params);
+      return '?${jsonString.query}';
+    }
+    return '';
   }
 
   dynamic _response(Response response) {
