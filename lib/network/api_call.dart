@@ -25,9 +25,8 @@ class ApiProvider {
   Future<dynamic> getCall(String url, String baseUrl, var params) async {
     Response responseJson;
     try {
-      var uri = baseUrl +
-          url +
-          ((params != null) ? queryParameters(params) : "");
+      var uri =
+          baseUrl + url + ((params != null) ? queryParameters(params) : "");
       final response = await dioRequest.get(uri);
       responseJson = _response(response);
     } on SocketException {
@@ -45,6 +44,33 @@ class ApiProvider {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
+  }
+
+  Future<dynamic> uploadImage(File file, String baseUrl, url) async {
+    Response responseJson;
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    final response = await dioRequest.post(baseUrl + url, data: formData);
+    responseJson = _response(response);
+    return responseJson;
+  }
+
+  Future<dynamic> sendFormFileCustom(
+      String url, Map<String, dynamic> data, Map<String, File> files) async {
+    Map<String, MultipartFile> fileMap = {};
+    for (MapEntry fileEntry in files.entries) {
+      File file = fileEntry.value;
+      String fileName = file.path.split('/').last;
+      fileMap[fileEntry.key] = MultipartFile(
+          file.openRead(), await file.length(),
+          filename: fileName);
+    }
+    data.addAll(fileMap);
+    var formData = FormData.fromMap(data);
+    return await dioRequest.post(url,
+        data: formData, options: Options(contentType: 'multipart/form-data'));
   }
 
   String queryParameters(Map<String, String>? params) {
